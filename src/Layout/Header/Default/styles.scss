@@ -1,0 +1,19 @@
+.header_searchbar {
+    position: relative;
+
+    .search_input {
+        color: black;
+    }
+
+    .search_btn {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fb6445;
+        color: white;
+        font-weight: 800;
+        font-size: 20px;
+    }
+
+}
