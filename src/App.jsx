@@ -5,6 +5,7 @@ import Login from "./Pages/User/Login"
 import Register from "./Pages/User/Register"
 import Recovery from "./Pages/User/Recovery"
 import PageNotFound from "./Components/PageNotFound"
+import DetailProduct from "./Pages/Detail"
 
 
 function App() {
@@ -14,6 +15,10 @@ function App() {
       <Routes>
         <Route path="/" element={<DefaultLayout />}>
           <Route index element={<Home />} />
+        </Route>
+
+        <Route path="/detail" element={<DefaultLayout />}>
+          <Route index element={<DetailProduct />} />
         </Route>
 
         <Route path="/user" element={<DefaultLayout />}>
