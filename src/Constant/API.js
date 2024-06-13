@@ -15,7 +15,7 @@ export const USER_ENDPOINT = {
 
 export const PURCHASE_ENDPOINT = {
     purchases: 'purchases?status=',
-
+    updateCart: 'purchases/update-purchase'
 }
 
 export const CART_ENDPOINT = {

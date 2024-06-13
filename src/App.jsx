@@ -15,6 +15,7 @@ import Purchase from "./Pages/User/Purchase";
 import Cart from "./Pages/Cart";
 
 import 'react-toastify/dist/ReactToastify.css'
+import CartLayout from "./Layout/Cart";
 
 
 function App() {
@@ -44,7 +45,7 @@ function App() {
           <Route path="purchase" element={<Purchase />} />
         </Route>
 
-        <Route path="/cart" element={<UserLayout />}>
+        <Route path="/cart" element={<CartLayout />}>
           <Route index element={<Cart />} />
         </Route>
 

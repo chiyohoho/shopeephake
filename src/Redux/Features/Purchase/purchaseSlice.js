@@ -4,7 +4,7 @@ import { API, PURCHASE_ENDPOINT, } from '../../../Constant/API';
 
 
 export const fetchPurchaseData = createAsyncThunk(
-    'user/fetchPurchaseData',
+    'purchase/fetchPurchaseData',
     async (status, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem('USER_A_TOKEN')
@@ -13,7 +13,6 @@ export const fetchPurchaseData = createAsyncThunk(
                     'Authorization': token,
                 },
             })
-
             return response.data.data
 
         } catch (error) {
@@ -29,7 +28,7 @@ export const fetchPurchaseData = createAsyncThunk(
 )
 
 export const fetchUserCart = createAsyncThunk(
-    'user/fetchUserCart',
+    'purchase/fetchUserCart',
     async (_, { dispatch }) => {
         const response = await axios.get(`${API}/${PURCHASE_ENDPOINT.purchases}-1`, {
             method: 'GET',
@@ -38,6 +37,53 @@ export const fetchUserCart = createAsyncThunk(
             }
         }, dispatch)
         return response.data.data
+    }
+)
+
+export const updateCart = createAsyncThunk(
+    'purchase/updateCart',
+    async (dataCart, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await axios.put(`${API}/purchases/update-purchase`, dataCart, {
+                headers: {
+                    'Authorization': localStorage.getItem('USER_A_TOKEN'),
+                },
+            });
+            dispatch(fetchUserCart())
+            return response.data.data
+        } catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data)
+                return rejectWithValue(error.response.data)
+            } else {
+                console.error('Error:', error.message)
+                return rejectWithValue(error.message)
+            }
+        }
+    }
+)
+
+export const deleteItemInCart = createAsyncThunk(
+    'purchase/deleteItemInCart',
+    async (dataCart, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await axios.delete(`${API}/purchases`, {
+                headers: {
+                    'Authorization': localStorage.getItem('USER_A_TOKEN'),
+                },
+                data: dataCart
+            });
+            dispatch(fetchUserCart())
+            return response.data.data
+        } catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data)
+                return rejectWithValue(error.response.data)
+            } else {
+                console.error('Error:', error.message)
+                return rejectWithValue(error.message)
+            }
+        }
     }
 )
 
@@ -51,6 +97,12 @@ const initialState = {
 
     purchaseCartStatus: 'idle',
     purchaseCartError: null,
+
+    updateCartStatus: 'idle',
+    updateCartError: null,
+
+    deleteItemInCartStatus: 'idle',
+    deleteItemInCartError: null,
 };
 
 export const purchaseSlice = createSlice({
@@ -75,6 +127,22 @@ export const purchaseSlice = createSlice({
             .addCase(fetchUserCart.rejected, (state, action) => {
                 state.purchaseCartStatus = 'failed'
                 state.purchaseCartError = action.payload
+            })
+
+            .addCase(updateCart.fulfilled, (state) => {
+                state.updateCartStatus = 'succeeded'
+            })
+            .addCase(updateCart.rejected, (state, action) => {
+                state.updateCartStatus = 'failed'
+                state.updateCartError = action.payload
+            })
+
+            .addCase(deleteItemInCart.fulfilled, (state) => {
+                state.deleteItemInCartStatus = 'succeeded'
+            })
+            .addCase(deleteItemInCart.rejected, (state, action) => {
+                state.deleteItemInCartStatus = 'failed'
+                state.deleteItemInCartError = action.payload
             })
 
 
