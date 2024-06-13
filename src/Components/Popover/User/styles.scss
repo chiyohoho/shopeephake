@@ -1,0 +1,10 @@
+.user_popover_select {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 18px;
+
+    &:hover {
+        transition: all 0.3s ease-in-out;
+    }
+}

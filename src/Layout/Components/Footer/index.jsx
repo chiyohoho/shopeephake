@@ -2,7 +2,7 @@ import { Divider, Flex } from "antd"
 
 const Footer = () => {
     return (
-        <div className="footer">
+        <div className="footer mt-[-25px]">
             <div className='container max-w-[70vw] mx-auto'>
                 <Divider />
 

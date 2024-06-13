@@ -10,6 +10,7 @@ const SideBar = () => {
     const [dataCategories, setDataCategories] = useState([])
     const [active, setActive] = useState('-1')
 
+
     const callCategories = async () => {
         await axios.get(`${API}/categories`)
             .then(res => {

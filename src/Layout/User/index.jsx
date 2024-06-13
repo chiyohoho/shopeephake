@@ -1,20 +1,23 @@
 import { Outlet } from "react-router-dom"
 import HeaderDefault from "../Components/Header/Default"
 import Footer from "../Components/Footer"
+import { Flex } from "antd"
+import UserNavBar from "../../Pages/User/Components/UserNavBar"
 
+const UserLayout = () => {
 
-const DefaultLayout = () => {
     return (
         <div className="bg-[#f5f5f5]">
             <HeaderDefault />
 
-            <div className="min-h-[1000px]">
+            <Flex className="max-w-[1400px] min-h-[600px] mx-auto px-5 gap-5 my-16">
+                <UserNavBar />
                 <Outlet />
-            </div>
+            </Flex>
 
             <Footer />
         </div>
     )
 }
 
-export default DefaultLayout
+export default UserLayout

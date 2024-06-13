@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom"
-import HeaderDefault from "../Components/Header/Default"
 import Footer from "../Components/Footer"
+import HeaderNonav from "../Components/Header/NoNav"
 
 
-const DefaultLayout = () => {
+const NoNavLayout = () => {
     return (
         <div className="bg-[#f5f5f5]">
-            <HeaderDefault />
+            <HeaderNonav />
 
-            <div className="min-h-[1000px]">
+            <div className="h-[600px]">
                 <Outlet />
             </div>
 
@@ -17,4 +17,4 @@ const DefaultLayout = () => {
     )
 }
 
-export default DefaultLayout
+export default NoNavLayout
