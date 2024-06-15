@@ -5,6 +5,7 @@ import { FaPen, } from "react-icons/fa6"
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import getAvatar from "../../../../Utilities/Format/getAvatar";
+import { truncatedEmail } from "../../../../Utilities/Format/truncatedEmail";
 
 const UserNavBar = () => {
     const location = useLocation().pathname
@@ -13,9 +14,6 @@ const UserNavBar = () => {
     const userData = useSelector(state => state.user.user.data)
 
     const avatar = getAvatar(userData)
-
-    const email = userData?.email
-    const truncatedText = email?.length > 20 ? email.substring(0, 20) + "..." : email
 
     useLayoutEffect(() => {
         if (location.includes('profile')) {
@@ -54,7 +52,7 @@ const UserNavBar = () => {
 
                 <div className="">
                     <div className="font-[500]">
-                        {truncatedText}
+                        {truncatedEmail(userData)}
                     </div>
                     <Flex className="items-center gap-2">
                         <div className="font-[500] text-gray-500 cursor-pointer">

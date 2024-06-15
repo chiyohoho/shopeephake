@@ -6,16 +6,17 @@ import PageNotFound from "./Components/PageNotFound";
 import DefaultLayout from "./Layout/Default";
 import NoNavLayout from "./Layout/NoNav";
 import Register from "./Pages/User/Register";
-
 import { Flip, ToastContainer } from 'react-toastify';
 import Profile from "./Pages/User/Profile";
 import UserLayout from "./Layout/User";
 import Password from "./Pages/User/Password";
 import Purchase from "./Pages/User/Purchase";
 import Cart from "./Pages/Cart";
+import CartLayout from "./Layout/Cart";
 
 import 'react-toastify/dist/ReactToastify.css'
-import CartLayout from "./Layout/Cart";
+import './styles.scss'
+import ErrorLayout from "./Layout/ErrorPage";
 
 
 function App() {
@@ -49,11 +50,12 @@ function App() {
           <Route index element={<Cart />} />
         </Route>
 
+        <Route path="*" element={<ErrorLayout />} />
       </Routes>
 
       <ToastContainer
         transition={Flip}
-        autoClose={2000}
+        autoClose={1000}
         pauseOnFocusLoss={false}
       />
     </Router>

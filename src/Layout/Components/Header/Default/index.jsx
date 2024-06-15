@@ -1,63 +1,53 @@
-import { Button, Divider, Dropdown, Flex, Popover, Space, Typography } from 'antd';
-import { CiGlobe, CiSearch, CiShoppingCart, CiUser } from "react-icons/ci";
-import { TfiAngleDown } from "react-icons/tfi";
-import { Link } from 'react-router-dom';
+import { Button, Divider, Flex, Popover, } from 'antd';
+import { CiSearch, CiShoppingCart } from "react-icons/ci";
+import { Link, useNavigate } from 'react-router-dom';
 import CartPopover from '../../../../Components/Cart/CartPopover';
 import UserPopover from '../../../../Components/Popover/User';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../../../Redux/Features/User/userSlice';
 import { useEffect } from 'react';
-
-import './styles.scss';
 import { fetchUserCart } from '../../../../Redux/Features/Purchase/purchaseSlice';
 
+import './styles.scss';
+import { showToast } from '../../../../Components/Toast';
+import getAvatar from '../../../../Utilities/Format/getAvatar';
+import { truncatedEmail } from '../../../../Utilities/Format/truncatedEmail';
+import Languages from '../../../../Components/Languages';
+
+
 const HeaderDefault = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const accessToken = useSelector(state => state.auth.accessToken)
     const userData = useSelector(state => state.user.user.data)
     const userDataCart = useSelector(state => state.purchase.userCart.data)
+    const avatar = getAvatar(userData)
+
 
     useEffect(() => {
-        if (accessToken && userData === null) {
-            dispatch(fetchUserData())
-            dispatch(fetchUserCart())
+        const fetchData = async () => {
+            if (accessToken) {
+                await dispatch(fetchUserData()).unwrap()
+                await dispatch(fetchUserCart()).unwrap()
+            }
         }
-    }, [dispatch, accessToken, userData])
+        fetchData()
+    }, [dispatch, accessToken])
 
-
-    const items = [
-        {
-            key: '1',
-            label: 'Tiếng Việt',
-        },
-        {
-            key: '2',
-            label: 'English',
-        },
-    ]
-
-    const userName = userData?.name?.split(' ')[0] || 'Guest'
+    const handleRedirect = () => {
+        if (accessToken) {
+            navigate('/cart')
+        } else {
+            showToast('error', 'Vui lòng đăng nhập')
+        }
+    }
 
     return (
         <div className="header bg-[#fa5030] py-5 text-white">
             <div className='container max-w-[1400px] mx-auto px-5'>
                 <Flex className='header_nav gap-5 justify-end '>
                     <Flex className='gap-1' align='center'>
-                        <CiGlobe size={'24px'} />
-                        <Dropdown
-                            menu={{
-                                items,
-                                selectable: true,
-                                defaultSelectedKeys: ['1'],
-                            }}
-                        >
-                            <Typography.Link>
-                                <Space className='text-white text-[16px] hover:text-gray-500'>
-                                    Ngôn Ngữ
-                                    <TfiAngleDown />
-                                </Space>
-                            </Typography.Link>
-                        </Dropdown>
+                        <Languages />
                     </Flex>
 
                     {accessToken ? (
@@ -65,8 +55,10 @@ const HeaderDefault = () => {
                             <Popover placement="bottomRight" content={<UserPopover />}>
                                 <Link to={'/user/profile'} className='hover:text-white'>
                                     <Flex className='items-center gap-1 cursor-pointer'>
-                                        <CiUser className='text-[24px]' />
-                                        <p>Hello {userName}!</p>
+                                        <img className="w-[24px] h-[24px] rounded-full overflow-hidden"
+                                            src={avatar.userAvatar} alt="avatar"
+                                        />
+                                        <p>{truncatedEmail(userData)}</p>
                                     </Flex>
                                 </Link>
                             </Popover>
@@ -85,17 +77,17 @@ const HeaderDefault = () => {
                         <img className='w-[200px]' src='https://freelogopng.com/images/all_img/1656181621shopee-logo-white.png' alt='shopeelogo' />
                     </Link>
 
-                    <div className='header_searchbar w-[100%]'>
-                        <input className='search_input p-3 rounded-lg w-[100%]' placeholder='Search something...' />
+                    <div className='header_searchbar w-full'>
+                        <input className='search_input p-3 rounded-lg w-full hover:outline-none outline-none' placeholder='Tìm kiếm sản phẩm...' />
                         <Button className='search_btn'><CiSearch /></Button>
                     </div>
 
                     <div className='header_cart cursor-pointer '>
                         <Popover className='relative' placement="bottomRight" title={<div className='text-2xl font-[500]'>Giỏ hàng</div>} content={<CartPopover />}>
-                            <div className='text-[40px]'>
+                            <div onClick={handleRedirect} className='text-[40px]'>
                                 <CiShoppingCart />
                             </div>
-                            <div className={`absolute min-w-7 text-center font-[500] rounded-lg bg-white text-[#fa5030] text-[12px] top-0 right-[-30%] ${userDataCart ? 'visible' : 'hidden'}`}>
+                            <div onClick={handleRedirect} className={`absolute min-w-7 text-center font-[500] rounded-lg bg-white text-[#fa5030] text-[12px] top-0 right-[-30%] ${userDataCart ? 'visible' : 'hidden'}`}>
                                 {userDataCart?.length || null}
                             </div>
                         </Popover>

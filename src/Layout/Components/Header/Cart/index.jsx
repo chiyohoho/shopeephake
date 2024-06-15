@@ -1,5 +1,5 @@
 import { Divider, Dropdown, Flex, Popover, Space, Typography } from 'antd';
-import { CiGlobe, CiSearch, CiUser } from "react-icons/ci";
+import { CiGlobe, CiSearch } from "react-icons/ci";
 import { TfiAngleDown } from "react-icons/tfi";
 import { Link } from 'react-router-dom';
 import UserPopover from '../../../../Components/Popover/User';
@@ -7,11 +7,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../../../Redux/Features/User/userSlice';
 import { useEffect } from 'react';
 import { fetchUserCart } from '../../../../Redux/Features/Purchase/purchaseSlice';
+import getAvatar from '../../../../Utilities/Format/getAvatar';
+import { truncatedEmail } from '../../../../Utilities/Format/truncatedEmail';
+import Languages from '../../../../Components/Languages';
 
 const HeaderCart = () => {
     const dispatch = useDispatch()
     const accessToken = useSelector(state => state.auth.accessToken)
     const userData = useSelector(state => state.user.user.data)
+    const avatar = getAvatar(userData)
 
     useEffect(() => {
         if (accessToken && userData === null) {
@@ -32,28 +36,12 @@ const HeaderCart = () => {
         },
     ]
 
-    const userName = userData?.name?.split(' ')[0] || 'Guest'
-
     return (
         <div className="header text-white bg-[#ffffff] shadow-detail">
-            <div className='container bg-[#fa5030] px-5 py-2'>
+            <div className=' bg-[#fa5030] px-5 py-2'>
                 <Flex className='header_nav gap-5 justify-end max-w-[1400px] mx-auto px-5'>
                     <Flex className='gap-1' align='center'>
-                        <CiGlobe size={'24px'} />
-                        <Dropdown
-                            menu={{
-                                items,
-                                selectable: true,
-                                defaultSelectedKeys: ['1'],
-                            }}
-                        >
-                            <Typography.Link>
-                                <Space className='text-white text-[16px] hover:text-gray-500'>
-                                    Ngôn Ngữ
-                                    <TfiAngleDown />
-                                </Space>
-                            </Typography.Link>
-                        </Dropdown>
+                        <Languages />
                     </Flex>
 
                     {accessToken ? (
@@ -61,8 +49,10 @@ const HeaderCart = () => {
                             <Popover placement="bottomRight" content={<UserPopover />}>
                                 <Link to={'/user/profile'} className='hover:text-white'>
                                     <Flex className='items-center gap-1 cursor-pointer'>
-                                        <CiUser className='text-[24px]' />
-                                        <p>Hello {userName}!</p>
+                                        <img className="w-[24px] h-[24px] rounded-full overflow-hidden"
+                                            src={avatar.userAvatar} alt="avatar"
+                                        />
+                                        <p>{truncatedEmail(userData)}</p>
                                     </Flex>
                                 </Link>
                             </Popover>

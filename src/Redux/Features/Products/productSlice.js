@@ -2,12 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { API, PRODUCT_ENDPOINT } from '../../../Constant/API'
 
-export const fetchAllProducts = createAsyncThunk(
-    'products/fetchAllProducts',
-    async () => {
-        const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}`)
-        return response.data.data.products
-    },
+export const fetchProducts = createAsyncThunk(
+    'products/fetchProducts',
+    async (params) => {
+        const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}`, { params })
+        return response.data.data
+    }
 )
 
 export const fetchDataDetail = createAsyncThunk(
@@ -20,9 +20,13 @@ export const fetchDataDetail = createAsyncThunk(
 
 const initialState = {
     listProduct: [],
+    pagination: null,
+
     productDetail: null,
-    isLoading: false,
-    isError: false,
+    productDetailError: null,
+
+    listProductStatus: null,
+    listProductError: false,
 }
 
 export const productSlice = createSlice({
@@ -33,25 +37,23 @@ export const productSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchAllProducts.fulfilled, (state, action) => {
-                state.listProduct = action.payload
-                state.isLoading = false
-                state.isError = false
+            .addCase(fetchProducts.fulfilled, (state, action) => {
+                state.listProduct = action.payload.products
+                state.pagination = action.payload.pagination
+                state.listProductStatus = true
             })
-            .addCase(fetchAllProducts.rejected, (state) => {
-                state.isLoading = false
-                state.isError = true
+            .addCase(fetchProducts.rejected, (state, action) => {
+                state.listProductError = action.payload
+                state.listProductStatus = false
             })
 
 
             .addCase(fetchDataDetail.fulfilled, (state, action) => {
                 state.productDetail = action.payload
-                state.isLoading = false
-                state.isError = false
+
             })
-            .addCase(fetchDataDetail.rejected, (state) => {
-                state.isLoading = false
-                state.isError = true
+            .addCase(fetchDataDetail.rejected, (state, action) => {
+                state.productDetailError = action.payload
             })
     },
 })

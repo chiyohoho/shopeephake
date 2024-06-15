@@ -2,27 +2,29 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { API, USER_ENDPOINT } from '../../../Constant/API'
 import { showToast } from '../../../Components/Toast'
-
-const accessTokenLocalStorage = localStorage.getItem('USER_A_TOKEN')
-// const refreshTokenLocalStorage = localStorage.getItem('USER_R_TOKEN')
+import { handleRemoveCart } from '../Purchase/purchaseSlice'
 
 export const logoutUser = createAsyncThunk(
     'user/logoutUser',
-    async () => {
+    async (_, { dispatch, rejectWithValue }) => {
         try {
             const res = await axios.post(`${API}/${USER_ENDPOINT.logout}`, null, {
                 headers: {
-                    Authorization: accessTokenLocalStorage
+                    Authorization: localStorage.getItem('USER_A_TOKEN')
                 }
             })
             if (res.status == 200) {
-                showToast('success', 'Đăng xuất thành công')
-                localStorage.removeItem('USER_A_TOKEN')
-                localStorage.removeItem('USER_R_TOKEN')
-
+                dispatch(handleRemoveCart())
+                return res.data.data
             }
-        } catch (err) {
-            console.error('Logout failed:', err)
+        } catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data)
+                return rejectWithValue(error.response.data)
+            } else {
+                console.error('Error:', error.message)
+                return rejectWithValue(error.message)
+            }
         }
     },
 )
@@ -31,7 +33,7 @@ export const loginUser = createAsyncThunk(
     'user/loginUser',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(`${API}/${USER_ENDPOINT.login}`, { email, password });
+            const response = await axios.post(`${API}/${USER_ENDPOINT.login}`, { email, password })
             return response.data.data
         } catch (err) {
             if (err.response && err.response.status == 422) {
@@ -57,7 +59,7 @@ export const refreshToken = createAsyncThunk(
 const initialState = {
     accessToken: localStorage.getItem('USER_A_TOKEN') || '',
     refreshToken: localStorage.getItem('USER_R_TOKEN') || '',
-    loginStatus: !!accessTokenLocalStorage,
+    loginStatus: false,
     logoutStatus: 'idle',
     loginError: null
 }
@@ -83,11 +85,12 @@ export const authSlice = createSlice({
 
 
             .addCase(logoutUser.fulfilled, (state) => {
-                state.logoutStatus = 'succeeded'
+                state.logoutStatus = false
                 state.accessToken = ''
                 state.refreshToken = ''
                 localStorage.removeItem('USER_A_TOKEN')
                 localStorage.removeItem('USER_R_TOKEN')
+                showToast('success', 'Đăng xuất thành công')
             })
             .addCase(logoutUser.rejected, (state) => {
                 state.logoutStatus = 'failed'

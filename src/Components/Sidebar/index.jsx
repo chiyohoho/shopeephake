@@ -23,6 +23,9 @@ const SideBar = () => {
         callCategories()
     }, [])
 
+    const [priceMin, setPriceMin] = useState()
+    const [priceMax, setPriceMax] = useState()
+
     return (
         <div className="sidebar min-w-[240px] w-[100%] mb-10 max-[900px]:hidden">
             <div className="categories">
@@ -54,9 +57,9 @@ const SideBar = () => {
                 <div>
                     <p className="my-3">Khoảng giá</p>
                     <Flex className="items-center gap-2">
-                        <Input placeholder="₫ From" />
+                        <Input value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="₫ From" />
                         <p className="text-[#ccc]">-</p>
-                        <Input placeholder="₫ To" />
+                        <Input value={priceMax} onChange={(e) => setPriceMax(e.target.value)} placeholder="₫ To" />
                     </Flex>
                     <button className="bg-[#fb5731] p-3 w-[100%] rounded-sm mt-5 text-white hover:bg-[#ec6c53]">Áp Dụng</button>
                 </div>
@@ -66,7 +69,7 @@ const SideBar = () => {
                 <p className="my-3">Đánh giá</p>
 
                 <Flex className="flex-col gap-2 px-5">
-                    <Flex className="gap-1">
+                    <Flex className="gap-1 cursor-pointer">
                         <FaStar className="text-orange-300" />
                         <FaStar className="text-orange-300" />
                         <FaStar className="text-orange-300" />
@@ -75,7 +78,7 @@ const SideBar = () => {
                     </Flex>
 
                     <Flex className="items-center gap-2">
-                        <Flex className="gap-1">
+                        <Flex className="gap-1 cursor-pointer">
                             <FaStar className="text-orange-300" />
                             <FaStar className="text-orange-300" />
                             <FaStar className="text-orange-300" />
@@ -87,7 +90,7 @@ const SideBar = () => {
                     </Flex>
 
                     <Flex className="items-center gap-2">
-                        <Flex className="gap-1">
+                        <Flex className="gap-1 cursor-pointer">
                             <FaStar className="text-orange-300" />
                             <FaStar className="text-orange-300" />
                             <FaStar className="text-orange-300" />
@@ -100,7 +103,7 @@ const SideBar = () => {
 
 
                     <Flex className="items-center gap-2">
-                        <Flex className="gap-1">
+                        <Flex className="gap-1 cursor-pointer">
                             <FaStar className="text-orange-300" />
                             <FaStar className="text-orange-300" />
                             <FaRegStar className="text-orange-300" />
@@ -112,7 +115,7 @@ const SideBar = () => {
 
 
                     <Flex className="items-center gap-2">
-                        <Flex className="gap-1">
+                        <Flex className="gap-1 cursor-pointer">
                             <FaStar className="text-orange-300" />
                             <FaRegStar className="text-orange-300" />
                             <FaRegStar className="text-orange-300" />

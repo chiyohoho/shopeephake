@@ -1,15 +1,14 @@
-import { Outlet } from "react-router-dom"
 import HeaderDefault from "../Components/Header/Default"
 import Footer from "../Components/Footer"
+import PageNotFound from "../../Components/PageNotFound"
 
-
-const DefaultLayout = () => {
+const ErrorLayout = () => {
     return (
         <div className="bg-[#f5f5f5]">
             <HeaderDefault />
 
-            <div className="">
-                <Outlet />
+            <div>
+                <PageNotFound />
             </div>
 
             <Footer />
@@ -17,4 +16,4 @@ const DefaultLayout = () => {
     )
 }
 
-export default DefaultLayout
+export default ErrorLayout

@@ -8,7 +8,7 @@ const CartPopover = () => {
     const userCart = useSelector(state => state.purchase.userCart.data)
 
     return (
-        <div className="w-[350px] text-[20px] ">
+        <div className="cart_popover w-[350px] text-[20px] ">
             {userCart?.length > 0 ?
                 <div className="h-fit">
                     <Flex className="flex-col gap-3 pr-2 max-h-[300px] overflow-y-auto">
@@ -34,7 +34,8 @@ const CartPopover = () => {
                         })}
                     </Flex>
 
-                    <div className="mt-7 mb-3 text-end text-[15px]">
+                    <div className="mt-7 mb-3 text-end text-[15px] flex items-center justify-between">
+                        <p className="text-gray-500">Tổng {userCart ? userCart.length : null} sản phẩm</p>
                         <Link to={'/cart'} className="hover:text-white rounded-sm text-white py-2 px-5 bg-[#fa5030]">
                             Xem giỏ hàng
                         </Link>

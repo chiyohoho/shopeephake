@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom"
-import HeaderDefault from "../Components/Header/Default"
 import Footer from "../Components/Footer"
 import { Flex } from "antd"
 import UserNavBar from "../../Pages/User/Components/UserNavBar"
+import HeaderDefault from "../Components/Header/Default"
 
 const UserLayout = () => {
 

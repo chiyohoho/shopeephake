@@ -3,18 +3,24 @@ import { useEffect, useState } from 'react'
 import RatingDetail from '../../Components/RatingStar/RatingDetail'
 import { CiShoppingCart } from 'react-icons/ci'
 import { formatSold } from '../../Utilities/Format/formatSold'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { formatCurrencyVND } from '../../Utilities/Format/formatCurrency'
 import { calculatePercentDiscount } from '../../Utilities/Format/calculatePercent'
 import CarouselDetail from './Components/carousel'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAllProducts, fetchDataDetail } from '../../Redux/Features/Products/productSlice'
+import { fetchDataDetail, fetchProducts } from '../../Redux/Features/Products/productSlice'
 import ItemCardDetail from './Components/card'
+import { showToast } from '../../Components/Toast'
+import { addToCart } from '../../Redux/Features/Purchase/purchaseSlice'
 
 const DetailProduct = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const accessToken = useSelector(state => state.auth.accessToken)
     const dataDetail = useSelector(state => state.products.productDetail)
     const listProduct = useSelector(state => state.products.listProduct)
+    const [count, setCount] = useState(1)
+
 
     const productParams = useParams()
     const productID = productParams.productName.split('-i-').pop()
@@ -24,7 +30,7 @@ const DetailProduct = () => {
         const fetchData = async () => {
             try {
                 await dispatch(fetchDataDetail(productID)).unwrap()
-                await dispatch(fetchAllProducts()).unwrap()
+                await dispatch(fetchProducts()).unwrap()
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             } catch (error) {
                 console.error('Failed to fetch product data:', error)
@@ -41,7 +47,23 @@ const DetailProduct = () => {
         }
     }, [dataDetail, listProduct])
 
-    const [count, setCount] = useState(1)
+
+
+    const handleRedirect = async (action) => {
+        const dataSubmit = { product_id: dataDetail._id, buy_count: count }
+
+        if (accessToken) {
+            if (action === 'cart') {
+                await dispatch(addToCart(dataSubmit)).unwrap()
+            } else {
+                await dispatch(addToCart(dataSubmit)).unwrap()
+                localStorage.setItem('purchasedProduct', JSON.stringify(dataDetail))
+                navigate('/cart')
+            }
+        } else {
+            showToast('error', 'Vui lòng đăng nhập')
+        }
+    }
 
     return (
         <div className="max-w-[1400px] mx-auto mt-10 px-5">
@@ -87,12 +109,12 @@ const DetailProduct = () => {
                         </Flex>
 
                         <Flex className='flex-wrap gap-5 my-10'>
-                            <Flex className='gap-2 items-center text-lg aspect-auto px-5 py-3 border-[1px] border-[#ee4d2d] text-[#ee4d2d] cursor-pointer bg-[#fdedea] hover:bg-[#fef6f4]'>
+                            <Flex onClick={() => handleRedirect('cart')} className='gap-2 items-center text-lg aspect-auto px-5 py-3 border-[1px] border-[#ee4d2d] text-[#ee4d2d] cursor-pointer bg-[#fdedea] hover:bg-[#fef6f4]'>
                                 <CiShoppingCart />
                                 <p>Thêm vào giỏ hàng</p>
                             </Flex>
 
-                            <div className='flex items-center justify-center px-5 py-3 border-[#ee4d2d] bg-[#ee4d2d] hover:bg-[#f05e42] text-white cursor-pointer'>
+                            <div onClick={() => handleRedirect('buy')} className='flex items-center justify-center px-5 py-3 border-[#ee4d2d] bg-[#ee4d2d] hover:bg-[#f05e42] text-white cursor-pointer'>
                                 Mua Ngay
                             </div>
                         </Flex>
