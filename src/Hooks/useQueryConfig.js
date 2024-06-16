@@ -1,32 +1,24 @@
-import { useLocation, useParams } from "react-router-dom"
+import { useLocation } from "react-router-dom"
 import _ from 'lodash'
 
 export default function useQueryConfig() {
-    const params = useParams()
-    const location = useLocation()
+    const location = useLocation().search
+
 
     const queryConfig = {
-        page: params.page || 1,
-        limit: params.limit || 20,
-        order: params.order || '',
-        sort_by: params.sort_by || '',
-        exclude: params.exclude || '',
-        name: params.name || '',
-        price_max: Number(params.price_max) || '',
-        price_min: Number(params.price_min) || '',
-        rating_filter: Number(params.rating_filter) || '',
-        category: params.category || '',
+        page: location.page || '1',
+        limit: location.limit || '20',
+        order: location.order,
+        sort_by: location.sort_by,
+        exclude: location.exclude,
+        name: location.name,
+        price_max: location.price_max,
+        price_min: location.price_min,
+        rating_filter: location.rating_filter,
+        category: location.category,
     }
 
     const filteredQueryConfig = _.omitBy(queryConfig, _.isEmpty)
-
-    const searchParams = new URLSearchParams(filteredQueryConfig)
-
-    const currentSearch = location.search || searchParams.toString()
-
-    if (location.search !== currentSearch) {
-        window.history.replaceState(null, null, `${location.pathname}?${currentSearch}`)
-    }
 
     return filteredQueryConfig
 }

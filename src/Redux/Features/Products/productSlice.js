@@ -5,8 +5,13 @@ import { API, PRODUCT_ENDPOINT } from '../../../Constant/API'
 export const fetchProducts = createAsyncThunk(
     'products/fetchProducts',
     async (params) => {
-        const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}`, { params })
-        return response.data.data
+        if (params && params.length > 0) {
+            const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}/${params}`)
+            return response.data.data;
+        } else {
+            const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}`, { params })
+            return response.data.data;
+        }
     }
 )
 
@@ -18,16 +23,24 @@ export const fetchDataDetail = createAsyncThunk(
     },
 )
 
+export const fetchDataCategories = createAsyncThunk(
+    'products/fetchDataCategories',
+    async () => {
+        const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.categories}`)
+        return response.data.data
+    },
+)
+
 const initialState = {
     listProduct: [],
+    listCategories: [],
     pagination: null,
-    defaultUI: false,
-
-    productDetail: null,
-    productDetailError: null,
 
     listProductStatus: null,
     listProductError: false,
+
+    listCategoriesStatus: null,
+    listCategoriesError: false,
 }
 
 export const productSlice = createSlice({
@@ -57,6 +70,16 @@ export const productSlice = createSlice({
             })
             .addCase(fetchDataDetail.rejected, (state, action) => {
                 state.productDetailError = action.payload
+            })
+
+            .addCase(fetchDataCategories.fulfilled, (state, action) => {
+                state.listCategories = action.payload
+                state.listCategoriesStatus = 'success'
+
+            })
+            .addCase(fetchDataCategories.rejected, (state, action) => {
+                state.listCategoriesError = action.payload
+                state.listCategoriesStatus = 'error'
             })
     },
 })

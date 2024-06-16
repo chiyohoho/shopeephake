@@ -5,14 +5,11 @@ import ItemCard from "../../Components/Products/ItemCard"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchProducts } from "../../Redux/Features/Products/productSlice"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6"
-import { useNavigate, useSearchParams } from "react-router-dom"
+import { useLocation, useSearchParams } from "react-router-dom"
 import { querySearchParams } from "../../Utilities/query/searchParams"
-
-
 
 const Home = () => {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const listProducts = useSelector(state => state.products.listProduct)
     const pagination = useSelector(state => state.products.pagination)
@@ -21,10 +18,9 @@ const Home = () => {
     const [activeSort, setActiveSort] = useState('createdAt')
     const [sortByPrice, setSortByPrice] = useState('')
 
-    const defaultSearchParams = querySearchParams()
-    const [updateSearchParams, setUpdateSearchParams] = useState(defaultSearchParams)
-
+    const [updateSearchParams, setUpdateSearchParams] = useState(querySearchParams())
     const [searchParams, setSearchparams] = useSearchParams()
+    const locationSearch = useLocation().search
 
     useLayoutEffect(() => {
         if (searchParams.size === 0) {
@@ -34,8 +30,13 @@ const Home = () => {
 
 
     useEffect(() => {
-        dispatch(fetchProducts(updateSearchParams))
-    }, [dispatch, updateSearchParams,])
+        if (locationSearch) {
+            dispatch(fetchProducts(locationSearch))
+        } else {
+            const newSearchParams = { ...updateSearchParams }
+            dispatch(fetchProducts(newSearchParams))
+        }
+    }, [dispatch, updateSearchParams, locationSearch])
 
     const handleOnChangeSetActiveSort = async (target) => {
         if (activeSort === target) {
@@ -43,8 +44,8 @@ const Home = () => {
         }
         const newSearchParams = { ...updateSearchParams, sort_by: target }
 
-        setUpdateSearchParams(newSearchParams)
         setSearchparams(newSearchParams)
+        setUpdateSearchParams(newSearchParams)
         setActiveSort(target)
         setSortByPrice('')
     }
@@ -53,23 +54,18 @@ const Home = () => {
         setActiveSort('price')
         const newSearchParams = { ...updateSearchParams, sort_by: 'price', order: e.target.value }
 
-        setUpdateSearchParams(newSearchParams)
         setSearchparams(newSearchParams)
+        setUpdateSearchParams(newSearchParams)
         setSortByPrice(e.target.value)
     }
 
     const handlePagination = (isNext) => {
         const newPage = isNext ? pagination.page + 1 : pagination.page - 1
+        const newSearchParams = { ...updateSearchParams, page: newPage }
 
-        setUpdateSearchParams({
-            ...updateSearchParams,
-            page: newPage
-        })
+        setSearchparams(newSearchParams)
+        setUpdateSearchParams(newSearchParams)
 
-        setSearchparams({
-            ...updateSearchParams,
-            page: newPage
-        });
     }
 
     if (!listProductStatus) {
@@ -78,16 +74,14 @@ const Home = () => {
         )
     }
 
-    console.log('check pagination:', pagination)
-
     return (
         <Flex className="max-w-[1400px] mx-auto mt-10 gap-10 px-5">
             <SideBar />
 
-            <section className="">
-                <Flex className="items-center justify-between bg-[#dde0e5]">
-                    <Flex className="sort_bar flex-wrap items-center gap-3  p-5">
-                        <p>Sắp xếp theo</p>
+            <section className="w-full">
+                <Flex className="max-[768px]:flex-col items-center gap-5 justify-between bg-[#dde0e5] p-5">
+                    <Flex className="sort_bar flex-wrap items-center gap-3">
+                        <p>Sắp xếp theo:</p>
 
                         <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
 
@@ -102,7 +96,7 @@ const Home = () => {
                         </select>
                     </Flex>
 
-                    <Flex className="items-center gap-2 pr-5">
+                    <Flex className="items-center justify-center gap-2 pr-5">
                         <Flex>
                             <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
                         </Flex>

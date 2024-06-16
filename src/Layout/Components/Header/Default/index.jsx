@@ -1,11 +1,11 @@
 import { Button, Divider, Flex, Popover, } from 'antd';
 import { CiSearch, CiShoppingCart } from "react-icons/ci";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import CartPopover from '../../../../Components/Cart/CartPopover';
 import UserPopover from '../../../../Components/Popover/User';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../../../Redux/Features/User/userSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchUserCart } from '../../../../Redux/Features/Purchase/purchaseSlice';
 
 import './styles.scss';
@@ -13,15 +13,42 @@ import { showToast } from '../../../../Components/Toast';
 import getAvatar from '../../../../Utilities/Format/getAvatar';
 import { truncatedEmail } from '../../../../Utilities/Format/truncatedEmail';
 import Languages from '../../../../Components/Languages';
+import { querySearchParams } from '../../../../Utilities/query/searchParams';
+import { fetchProducts } from '../../../../Redux/Features/Products/productSlice';
+import { useForm } from 'react-hook-form';
 
 
 const HeaderDefault = () => {
+    const { register, handleSubmit } = useForm()
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const accessToken = useSelector(state => state.auth.accessToken)
     const userData = useSelector(state => state.user.user.data)
     const userDataCart = useSelector(state => state.purchase.userCart.data)
     const avatar = getAvatar(userData)
+
+    const [updateSearchParams, setUpdateSearchParams] = useState(querySearchParams())
+    const [searchParams, setSearchparams] = useSearchParams()
+    const locationSearch = useLocation().search
+
+    const onSubmit = (data) => {
+        if (!data) {
+            return
+        }
+        const updatedParams = { ...updateSearchParams, name: data.search }
+
+        setSearchparams(updatedParams)
+        setUpdateSearchParams(updatedParams)
+    }
+
+    useEffect(() => {
+        if (locationSearch) {
+            dispatch(fetchProducts(locationSearch))
+        } else {
+            const newSearchParams = { ...updateSearchParams }
+            dispatch(fetchProducts(newSearchParams))
+        }
+    }, [dispatch, updateSearchParams, locationSearch])
 
 
     useEffect(() => {
@@ -77,9 +104,18 @@ const HeaderDefault = () => {
                         <img className='w-[200px]' src='https://freelogopng.com/images/all_img/1656181621shopee-logo-white.png' alt='shopeelogo' />
                     </Link>
 
-                    <div className='header_searchbar w-full'>
-                        <input className='search_input p-3 rounded-lg w-full hover:outline-none outline-none' placeholder='Tìm kiếm sản phẩm...' />
-                        <Button className='search_btn'><CiSearch /></Button>
+                    <div className="header_searchbar w-full">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <input
+                                className="search_input p-3 rounded-lg w-full hover:outline-none outline-none"
+                                type="text"
+                                placeholder="Tìm kiếm sản phẩm..."
+                                {...register("search")}
+                            />
+                            <button type="submit" className="search_btn px-6 py-2 rounded-sm">
+                                <CiSearch />
+                            </button>
+                        </form>
                     </div>
 
                     <div className='header_cart cursor-pointer '>
