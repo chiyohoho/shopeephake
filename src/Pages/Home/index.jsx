@@ -1,38 +1,75 @@
 import { Flex, Skeleton } from "antd"
 import SideBar from "../../Components/Sidebar"
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import ItemCard from "../../Components/Products/ItemCard"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchProducts } from "../../Redux/Features/Products/productSlice"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6"
-import useQueryConfig from "../../Hooks/useQueryConfig"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { querySearchParams } from "../../Utilities/query/searchParams"
 
 
 
 const Home = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const listProducts = useSelector(state => state.products.listProduct)
     const pagination = useSelector(state => state.products.pagination)
     const listProductStatus = useSelector(state => state.products.listProductStatus)
 
-    const [activeSort, setActiveSort] = useState('2')
-    const [sortByPrice, setSortByPrice] = useState('default')
+    const [activeSort, setActiveSort] = useState('createdAt')
+    const [sortByPrice, setSortByPrice] = useState('')
 
-    const queryConfig = useQueryConfig()
+    const defaultSearchParams = querySearchParams()
+    const [updateSearchParams, setUpdateSearchParams] = useState(defaultSearchParams)
+
+    const [searchParams, setSearchparams] = useSearchParams()
+
+    useLayoutEffect(() => {
+        if (searchParams.size === 0) {
+            setActiveSort('createdAt')
+        }
+    }, [searchParams])
+
 
     useEffect(() => {
-        dispatch(fetchProducts())
-    }, [dispatch])
+        dispatch(fetchProducts(updateSearchParams))
+    }, [dispatch, updateSearchParams,])
 
-    const handleOnChangeSetActiveSort = (target) => {
+    const handleOnChangeSetActiveSort = async (target) => {
+        if (activeSort === target) {
+            return
+        }
+        const newSearchParams = { ...updateSearchParams, sort_by: target }
+
+        setUpdateSearchParams(newSearchParams)
+        setSearchparams(newSearchParams)
         setActiveSort(target)
-        setSortByPrice('default')
+        setSortByPrice('')
     }
 
     const handleOnChangeSortByPrice = (e) => {
-        setActiveSort('4')
+        setActiveSort('price')
+        const newSearchParams = { ...updateSearchParams, sort_by: 'price', order: e.target.value }
+
+        setUpdateSearchParams(newSearchParams)
+        setSearchparams(newSearchParams)
         setSortByPrice(e.target.value)
+    }
+
+    const handlePagination = (isNext) => {
+        const newPage = isNext ? pagination.page + 1 : pagination.page - 1
+
+        setUpdateSearchParams({
+            ...updateSearchParams,
+            page: newPage
+        })
+
+        setSearchparams({
+            ...updateSearchParams,
+            page: newPage
+        });
     }
 
     if (!listProductStatus) {
@@ -41,7 +78,7 @@ const Home = () => {
         )
     }
 
-    console.log('check queryConfig:', queryConfig)
+    console.log('check pagination:', pagination)
 
     return (
         <Flex className="max-w-[1400px] mx-auto mt-10 gap-10 px-5">
@@ -52,16 +89,16 @@ const Home = () => {
                     <Flex className="sort_bar flex-wrap items-center gap-3  p-5">
                         <p>Sắp xếp theo</p>
 
-                        <div onClick={() => handleOnChangeSetActiveSort('1')} className={`p-2 ${activeSort == '1' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
+                        <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
 
-                        <div onClick={() => handleOnChangeSetActiveSort('2')} className={`p-2 ${activeSort == '2' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
+                        <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
 
-                        <div onClick={() => handleOnChangeSetActiveSort('3')} className={`p-2 ${activeSort == '3' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
+                        <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
 
-                        <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == '4' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
+                        <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
                             <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
-                            <option className="bg-white text-black" value={'lowtohigh'}>Thấp đến cao</option>
-                            <option className="bg-white text-black" value={'hightolow'}>Cao đến thấp</option>
+                            <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
+                            <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
                         </select>
                     </Flex>
 
@@ -71,10 +108,10 @@ const Home = () => {
                         </Flex>
 
                         <Flex className="items-center">
-                            <button disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
+                            <button onClick={() => handlePagination(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
                                 <FaAngleLeft />
                             </button>
-                            <button className="p-[10px] bg-white shadow-detail text-[12px] cursor-pointer">
+                            <button onClick={() => handlePagination(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
                                 <FaAngleRight />
                             </button>
                         </Flex>

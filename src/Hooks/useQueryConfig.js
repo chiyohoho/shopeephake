@@ -16,7 +16,7 @@ export default function useQueryConfig() {
         price_min: Number(params.price_min) || '',
         rating_filter: Number(params.rating_filter) || '',
         category: params.category || '',
-    };
+    }
 
     const filteredQueryConfig = _.omitBy(queryConfig, _.isEmpty)
 

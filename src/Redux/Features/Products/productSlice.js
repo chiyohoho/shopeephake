@@ -21,6 +21,7 @@ export const fetchDataDetail = createAsyncThunk(
 const initialState = {
     listProduct: [],
     pagination: null,
+    defaultUI: false,
 
     productDetail: null,
     productDetailError: null,
@@ -33,7 +34,9 @@ export const productSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {
-
+        changeDefaultUIStore: (state, action) => {
+            state.defaultUI = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder
