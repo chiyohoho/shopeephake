@@ -8,6 +8,8 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6"
 import { createSearchParams, useLocation, useNavigate } from "react-router-dom"
 import useQueryConfig from "../../Hooks/useQueryConfig"
 import { omit } from "lodash"
+import SideBarDrawer from "../../Components/Drawer/sidebarDrawer"
+import SortDrawer from "../../Components/Drawer/sortDrawer"
 
 const Home = () => {
     const dispatch = useDispatch()
@@ -114,48 +116,72 @@ const Home = () => {
 
     return (
         <Flex className="max-w-[1400px] mx-auto mt-10 gap-10 px-5">
-            <SideBar />
+            <div className="max-[768px]:hidden">
+                <SideBar />
+            </div>
 
             <section className="w-full">
                 {listProducts?.length > 0 ?
-                    <Flex className="max-[768px]:flex-col items-center gap-5 justify-between bg-[#dde0e5] p-5">
-                        <Flex className="sort_bar flex-wrap items-center gap-3">
-                            <p>Sắp xếp theo:</p>
+                    <div>
+                        <Flex className="max-[768px]:flex-col max-[768px]:hidden items-center gap-5 justify-between bg-[#dde0e5] p-5">
+                            <Flex className="sort_bar flex-wrap items-center gap-3">
+                                <p>Sắp xếp theo:</p>
 
-                            <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
+                                <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
 
-                            <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
+                                <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
 
-                            <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
+                                <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
 
-                            <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
-                                <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
-                                <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
-                                <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
-                            </select>
-                        </Flex>
-
-                        <Flex className="items-center justify-center gap-2 pr-5">
-                            <Flex>
-                                <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
+                                <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
+                                    <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
+                                    <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
+                                    <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
+                                </select>
                             </Flex>
 
-                            <Flex className="items-center">
-                                <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
-                                    <FaAngleLeft />
-                                </button>
-                                <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
-                                    <FaAngleRight />
-                                </button>
+                            <Flex className="items-center justify-center gap-2 self-end">
+                                <Flex>
+                                    <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
+                                </Flex>
+
+                                <Flex className="items-center">
+                                    <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
+                                        <FaAngleLeft />
+                                    </button>
+                                    <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
+                                        <FaAngleRight />
+                                    </button>
+                                </Flex>
                             </Flex>
                         </Flex>
-                    </Flex>
+
+                        <div className="min-[768px]:hidden max-[768px]:block p-5 bg-gray-200">
+                            <Flex className="justify-between">
+                                <SideBarDrawer />
+
+                                <Flex className="items-center justify-center gap-2 self-end">
+                                    <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
+                                        <FaAngleLeft />
+                                    </button>
+                                    <Flex>
+                                        <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
+                                    </Flex>
+                                    <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
+                                        <FaAngleRight />
+                                    </button>
+                                </Flex>
+
+                                <SortDrawer />
+                            </Flex>
+                        </div>
+                    </div>
                     :
                     null
                 }
 
                 {listProducts?.length > 0 ?
-                    <div className="mt-10 grid gap-2 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2">
+                    <div className="mt-10 grid gap-2 grid-cols-2 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3">
                         {listProducts.map((item) => (
                             <ItemCard key={item._id} item={item} />
                         ))}

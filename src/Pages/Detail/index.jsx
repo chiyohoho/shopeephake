@@ -131,7 +131,7 @@ const DetailProduct = () => {
             <div className='mt-10 shadow-detail p-5'>
                 <p className='text-[20px] font-[400] text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</p>
 
-                <div className="mt-10 flex flex-wrap gap-5">
+                <div className="mt-10 flex flex-wrap gap-2">
                     {sameProducts &&
                         sameProducts.map((item) => (
                             <ItemCardDetail key={item._id} item={item} />

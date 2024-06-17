@@ -9,6 +9,8 @@ import { calculateDiscount, calculateTotal } from "../../Utilities/Format/calcul
 import { Link } from "react-router-dom";
 import { showToast } from "../../Components/Toast";
 
+import './styles.scss'
+
 const Cart = () => {
     const dispatch = useDispatch()
     const [checkedItems, setCheckedItems] = useState([])
@@ -104,10 +106,10 @@ const Cart = () => {
     }
 
     return (
-        <div className='w-full'>
+        <div className='purchase_board w-full overflow-auto'>
             {userCart?.length > 0 ?
-                <div className="relative">
-                    <Row className="bg-[#ffffff] py-5 pl-10 shadow-detail text-center px-5">
+                <div className="relative p-2 w-full min-w-[1000px] overflow-scroll">
+                    <Row className="bg-[#ffffff] py-5 pl-10 shadow-detail text-center px-5 w-full">
                         <Col span={12} className="flex items-center gap-2 text-[16px]">
                             <Checkbox checked={checkAll} onChange={handleCheckAll} />
                             <p>Sản phẩm</p>
@@ -190,7 +192,7 @@ const Cart = () => {
                                 <div className="font-[500]">Tổng thanh toán ({checkedItems.length} sản phẩm): <p className="inline-block text-[20px] text-[#fa5030]">{calculateTotal(checkedItems)}</p></div>
                                 <div className="text-gray-500">Tiết kiệm: <p className="font-[500] inline-block text-[#fa5030]">{calculateDiscount(checkedItems)}</p></div>
                             </div>
-                            <button onClick={handleBuyProduct} className="bg-[#d84949] hover:bg-[#dc2626] text-white py-3 px-12">MUA HÀNG</button>
+                            <button onClick={handleBuyProduct} className="bg-[#d84949] hover:bg-[#dc2626] text-white py-3 px-8">MUA HÀNG</button>
                         </Col>
                     </Row>
                 </div >

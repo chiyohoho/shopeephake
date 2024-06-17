@@ -106,7 +106,7 @@ const HeaderDefault = () => {
                     ) : null}
                 </Flex>
 
-                <Flex className='header_search items-center justify-between gap-10 mt-5'>
+                <Flex className='header_search items-center justify-between gap-2 mt-5'>
                     <Link to={'/'} className='header_logo'>
                         <img className='w-[200px]' src='https://freelogopng.com/images/all_img/1656181621shopee-logo-white.png' alt='shopeelogo' />
                     </Link>
@@ -119,7 +119,7 @@ const HeaderDefault = () => {
                                 placeholder="Tìm kiếm sản phẩm..."
                                 {...register("search")}
                             />
-                            <button type="submit" className="search_btn px-6 py-2 rounded-sm">
+                            <button type="submit" className="search_btn flex justify-center items-center w-12 h-8 rounded-sm">
                                 <CiSearch />
                             </button>
                         </form>

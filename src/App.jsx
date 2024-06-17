@@ -17,6 +17,7 @@ import CartLayout from "./Layout/Cart";
 import 'react-toastify/dist/ReactToastify.css'
 import './styles.scss'
 import ErrorLayout from "./Layout/ErrorPage";
+import BackToTop from "./Components/Button/BackToTop";
 
 
 function App() {
@@ -58,6 +59,10 @@ function App() {
         autoClose={1000}
         pauseOnFocusLoss={false}
       />
+
+      <div className="fixed">
+        <BackToTop />
+      </div>
     </Router>
   );
 }

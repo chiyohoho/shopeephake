@@ -115,7 +115,7 @@ const SideBar = () => {
     }
 
     return (
-        <div className="sidebar max-w-[240px] w-[100%] mb-10 max-[900px]:hidden">
+        <div className="sidebar w-full mb-10">
             <div className="categories">
                 <Flex className={`items-center gap-2 text-[20px] ${active == '-1' ? 'text-[#fb5731]' : 'text-black'} border-b-[1px] border-b-gray-300 pb-3`}>
                     <CiCircleList />

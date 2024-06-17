@@ -72,157 +72,166 @@ const Profile = () => {
     }, [userData, getDate, getMonth, getYear, reset])
 
     return (
-        <FormProvider {...{ control, handleSubmit, errors, register, reset }}>
-            <div className="bg-white w-full h-fit px-8 py-5 rounded-md shadow-detail">
-                <div>
-                    <p className="text-[20px] font-[500]">Hồ sơ của tôi</p>
-                    <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-                </div>
-
-                <Divider />
-
-                <Flex className="w-full gap-10">
-                    <div className="w-full">
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="w-full">
-                                <Flex className="w-full items-center">
-                                    <div className="flex flex-col gap-5 w-full px-5">
-                                        <Flex className="items-center gap-5">
-                                            <p className="w-[150px] text-end">Email:</p>
-                                            <p className="w-full">{userData?.email}</p>
-                                        </Flex>
-
-                                        <div>
-                                            <Flex className="items-center gap-5">
-                                                <p className="w-[150px] text-end">Tên:</p>
-                                                <input
-                                                    className="user_input"
-                                                    defaultValue={userData?.name}
-                                                    type="text"
-                                                    placeholder="Tên"
-                                                    {...register('name', {
-                                                        required: 'Tên là bắt buộc',
-                                                        maxLength: 50
-                                                    })}
-                                                />
-                                            </Flex>
-                                            {errors.name && <p className="error-message text-red-500 ml-[140px]">{errors.name.message}</p>}
-                                        </div>
-
-                                        <div>
-                                            <Flex className="items-center gap-5">
-                                                <p className="w-[150px] text-end">Số điện thoại:</p>
-                                                <input
-                                                    className="user_input appearance-auto"
-                                                    defaultValue={userData?.phone}
-                                                    type="number"
-                                                    placeholder="Số điện thoại"
-                                                    {...register('phone', {
-                                                        required: 'Số điện thoại là bắt buộc',
-                                                        maxLength: 20
-                                                    })}
-                                                />
-                                            </Flex>
-                                            {errors.phone && <p className="error-message text-red-500 ml-[140px]">{errors.phone.message}</p>}
-                                        </div>
-
-                                        <div>
-                                            <Flex className="items-center gap-5">
-                                                <p className="w-[150px] text-end">Địa chỉ:</p>
-                                                <input
-                                                    className="user_input"
-                                                    type="text"
-                                                    defaultValue={userData?.address}
-                                                    placeholder="Địa chỉ"
-                                                    {...register('address', {
-                                                        required: 'Địa chỉ là bắt buộc',
-                                                        maxLength: 100
-                                                    })}
-                                                />
-                                            </Flex>
-                                            {errors.address && <p className="error-message text-red-500 ml-[140px]">{errors.address.message}</p>}
-                                        </div>
-
-                                        <Flex className="birthdate-input items-center gap-5 w-full">
-                                            <p htmlFor="birthdate" className="w-[150px] text-end">Ngày sinh:</p>
-
-                                            <div className="w-full">
-                                                <Flex className='gap-1 w-full'>
-                                                    <Controller
-                                                        control={control}
-                                                        name="birthDay"
-                                                        rules={{ required: 'Vui lòng chọn ngày' }}
-                                                        render={({ field }) => (
-                                                            <select id="birthDay" {...field} className='user_input_birthdate'>
-                                                                <option value="">Ngày</option>
-                                                                {days.map((day) => (
-                                                                    <option key={day} value={day}>{day}</option>
-                                                                ))}
-                                                            </select>
-                                                        )}
-                                                    />
-
-                                                    <Controller
-                                                        control={control}
-                                                        name="birthMonth"
-                                                        rules={{ required: 'Vui lòng chọn tháng' }}
-                                                        render={({ field }) => (
-                                                            <select id="birthMonth" {...field} className='user_input_birthdate'>
-                                                                <option value="">Tháng</option>
-                                                                {months.map((month) => (
-                                                                    <option key={month} value={month}>{month}</option>
-                                                                ))}
-                                                            </select>
-                                                        )}
-                                                    />
-
-                                                    <Controller
-                                                        control={control}
-                                                        name="birthYear"
-                                                        rules={{
-                                                            required: 'Vui lòng chọn năm',
-                                                            validate: value => value >= 1980 && value <= 2004 || 'Năm sinh phải từ 1980 đến 2004'
-                                                        }}
-                                                        render={({ field }) => (
-                                                            <select id="birthYear" {...field}
-                                                                className='user_input_birthdate'>
-                                                                <option value="">Năm</option>
-                                                                {years.map((year) => (
-                                                                    <option key={year} value={year}>{year}</option>
-                                                                ))}
-                                                            </select>
-                                                        )}
-                                                    />
-                                                </Flex>
-                                                {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
-                                                    <p className="error-message text-red-500">
-                                                        {errors.birthDay?.message || errors.birthMonth?.message || errors.birthYear?.message}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </Flex>
-                                    </div>
-
-                                    <Flex className="flex-col border-l-[1px] w-1/2 h-full border-[#ccc] items-center justify-center gap-5">
-                                        <div>
-                                            <UploadAvatar setAvatarFile={setAvatarFile} />
-                                        </div>
-
-                                        <p className="text-gray-400">
-                                            Dụng lượng file tối đa 1 MB
-                                            <br />
-                                            Định dạng: .JPEG, .PNG
-                                        </p>
-                                    </Flex>
-                                </Flex>
-
-                                <button type="submit" className="text-white py-2 px-5 my-10 ml-[155px] rounded-sm bg-[#fa5030]">Lưu</button>
-                            </div>
-                        </form>
+        <div className="w-full">
+            <FormProvider {...{ control, handleSubmit, errors, register, reset }}>
+                <div className="bg-white w-full h-fit px-8 py-5 rounded-md shadow-detail">
+                    <div>
+                        <p className="text-[20px] font-[500]">Hồ sơ của tôi</p>
+                        <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
                     </div>
-                </Flex>
-            </div>
-        </FormProvider>
+
+                    <Divider />
+
+                    <Flex className="w-full gap-10 min-w-[200px]">
+                        <div className="w-full">
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className="w-full">
+                                    <Flex className="flex max-[1000px]:flex-col w-full items-center justify-center">
+                                        <div className="flex flex-col gap-5 w-full max-w-[700px] px-5">
+                                            <div className="items-center justify-center">
+                                                <p className="">Email:</p>
+                                                <p className="w-full user_input cursor-not-allowed">{userData?.email}</p>
+                                            </div>
+
+                                            <div>
+                                                <div className="">
+                                                    <p className="">Họ và tên:</p>
+                                                    <input
+                                                        className="user_input"
+                                                        defaultValue={userData?.name}
+                                                        type="text"
+                                                        placeholder="Tên"
+                                                        {...register('name', {
+                                                            required: 'Tên là bắt buộc',
+                                                            maxLength: 50
+                                                        })}
+                                                    />
+                                                </div>
+                                                {errors.name && <p className="error-message text-red-500 ">{errors.name.message}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className="">
+                                                    <p className="">Số điện thoại:</p>
+                                                    <input
+                                                        className="user_input"
+                                                        defaultValue={userData?.phone}
+                                                        type="number"
+                                                        placeholder="Số điện thoại"
+                                                        {...register('phone', {
+                                                            required: 'Số điện thoại là bắt buộc',
+                                                            maxLength: 20
+                                                        })}
+                                                    />
+                                                </div>
+                                                {errors.phone && <p className="error-message text-red-500 ">{errors.phone.message}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className="items-center justify-center">
+                                                    <p className="">Địa chỉ:</p>
+                                                    <input
+                                                        className="user_input"
+                                                        type="text"
+                                                        defaultValue={userData?.address}
+                                                        placeholder="Địa chỉ"
+                                                        {...register('address', {
+                                                            required: 'Địa chỉ là bắt buộc',
+                                                            maxLength: 100
+                                                        })}
+                                                    />
+                                                </div>
+                                                {errors.address && <p className="error-message text-red-500">{errors.address.message}</p>}
+                                            </div>
+
+                                            <Flex className="birthdate-input flex-wrap items-center w-full">
+                                                <p htmlFor="birthdate" className="">Ngày sinh:</p>
+                                                <div className="w-full">
+                                                    <Flex className='gap-1'>
+                                                        <Controller
+                                                            control={control}
+                                                            name="birthDay"
+                                                            rules={{ required: 'Vui lòng chọn ngày' }}
+                                                            render={({ field }) => (
+                                                                <select id="birthDay" {...field} className='user_input_birthdate'>
+                                                                    <option value="">Ngày</option>
+                                                                    {days.map((day) => (
+                                                                        <option key={day} value={day}>{day}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
+                                                        />
+
+                                                        <Controller
+                                                            control={control}
+                                                            name="birthMonth"
+                                                            rules={{ required: 'Vui lòng chọn tháng' }}
+                                                            render={({ field }) => (
+                                                                <select id="birthMonth" {...field} className='user_input_birthdate'>
+                                                                    <option value="">Tháng</option>
+                                                                    {months.map((month) => (
+                                                                        <option key={month} value={month}>{month}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
+                                                        />
+
+                                                        <Controller
+                                                            control={control}
+                                                            name="birthYear"
+                                                            rules={{
+                                                                required: 'Vui lòng chọn năm',
+                                                                validate: value => value >= 1980 && value <= 2004 || 'Năm sinh phải từ 1980 đến 2004'
+                                                            }}
+                                                            render={({ field }) => (
+                                                                <select id="birthYear" {...field}
+                                                                    className='user_input_birthdate'>
+                                                                    <option value="">Năm</option>
+                                                                    {years.map((year) => (
+                                                                        <option key={year} value={year}>{year}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
+                                                        />
+                                                    </Flex>
+                                                    {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
+                                                        <p className="error-message text-red-500">
+                                                            {errors.birthDay?.message || errors.birthMonth?.message || errors.birthYear?.message}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </Flex>
+                                        </div>
+
+                                        <div className="w-[1px] bg-[#ccc] h-[400px] max-[1000px]:hidden">
+
+                                        </div>
+
+                                        <div className="w-full bg-[#ccc] h-[1px] min-[1000px]:hidden my-5">
+
+                                        </div>
+
+                                        <Flex className="flex-col w-[300px] h-full  items-center justify-center gap-5">
+                                            <div>
+                                                <UploadAvatar setAvatarFile={setAvatarFile} />
+                                            </div>
+
+                                            <p className="text-gray-400">
+                                                Dụng lượng file tối đa 1 MB
+                                                <br />
+                                                Định dạng: .JPEG, .PNG
+                                            </p>
+                                        </Flex>
+                                    </Flex>
+
+                                    <button type="submit" className="text-white py-2 px-5 my-10 rounded-sm bg-[#fa5030]">Lưu</button>
+                                </div>
+                            </form>
+                        </div>
+                    </Flex>
+                </div>
+            </FormProvider>
+        </div>
     );
 };
 

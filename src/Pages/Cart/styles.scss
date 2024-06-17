@@ -1,0 +1,28 @@
+.purchase_board {
+    /* ...các thuộc tính khác... */
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: orangered;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: #f5f5f5f5;
+    }
+
+    &::-moz-scrollbar {
+        width: 8px;
+    }
+
+    &::-moz-scrollbar-thumb {
+        background-color: orangered;
+    }
+
+    &::-moz-scrollbar-track {
+        background-color: #f5f5f5f5;
+    }
+}

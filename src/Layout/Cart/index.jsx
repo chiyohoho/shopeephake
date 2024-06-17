@@ -9,7 +9,7 @@ const CartLayout = () => {
         <div className="bg-[#f5f5f5]">
             <HeaderCart />
 
-            <Flex className="max-w-[1400px] min-h-[600px] mx-auto px-5 gap-5 my-16">
+            <Flex className="max-w-[1400px] mx-auto px-5 gap-5 my-16">
                 <Outlet />
             </Flex>
 

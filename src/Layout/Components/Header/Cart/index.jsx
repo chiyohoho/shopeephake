@@ -50,7 +50,7 @@ const HeaderCart = () => {
     return (
         <div className="header text-white bg-[#ffffff] shadow-detail">
             <div className=' bg-[#fa5030] px-5 py-2'>
-                <Flex className='header_nav gap-5 justify-end max-w-[1400px] mx-auto px-5'>
+                <Flex className='header_nav flex-wrap gap-5 justify-end max-w-[1400px] mx-auto px-5'>
                     <Flex className='gap-1' align='center'>
                         <Languages />
                     </Flex>
@@ -60,7 +60,7 @@ const HeaderCart = () => {
                             <Popover placement="bottomRight" content={<UserPopover />}>
                                 <Link to={'/user/profile'} className='hover:text-white'>
                                     <Flex className='items-center gap-1 cursor-pointer'>
-                                        <img className="w-[24px] h-[24px] rounded-full overflow-hidden"
+                                        <img className="min-w-[24px] h-[24px] rounded-full overflow-hidden"
                                             src={avatar.userAvatar} alt="avatar"
                                         />
                                         <p>{truncatedEmail(userData)}</p>
@@ -82,8 +82,8 @@ const HeaderCart = () => {
                 <Flex className='header_search items-end justify-between gap-10'>
                     <Link to={'/'} className='header_logo flex items-end gap-5'>
                         <img className='w-[200px]' src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Shopee.svg/1200px-Shopee.svg.png' alt='shopeelogo' />
-                        <div className='w-[1px] h-9 bg-[#fa5030]'></div>
-                        <p className='text-[#fa5030] text-[20px] leading-10'>Giỏ hàng</p>
+                        <div className='w-[1px] h-9 bg-[#fa5030] max-[920px]:hidden'></div>
+                        <p className='text-[#fa5030] text-[20px] leading-10 max-[920px]:hidden'>Giỏ hàng</p>
                     </Link>
 
                     <div className="header_searchbar w-full max-w-[500px]">
@@ -94,7 +94,7 @@ const HeaderCart = () => {
                                 placeholder="Tìm kiếm sản phẩm..."
                                 {...register("search")}
                             />
-                            <button type="submit" className="search_btn px-6 py-2 rounded-sm">
+                            <button type="submit" className="search_btn px-3 py-2 rounded-sm">
                                 <CiSearch />
                             </button>
                         </form>
