@@ -1,11 +1,11 @@
-import { Button, Divider, Flex, Popover, } from 'antd';
+import { Divider, Flex, Popover, } from 'antd';
 import { CiSearch, CiShoppingCart } from "react-icons/ci";
-import { Link, createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, createSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import CartPopover from '../../../../Components/Cart/CartPopover';
 import UserPopover from '../../../../Components/Popover/User';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../../../Redux/Features/User/userSlice';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { fetchUserCart } from '../../../../Redux/Features/Purchase/purchaseSlice';
 
 import './styles.scss';
@@ -13,7 +13,6 @@ import { showToast } from '../../../../Components/Toast';
 import getAvatar from '../../../../Utilities/Format/getAvatar';
 import { truncatedEmail } from '../../../../Utilities/Format/truncatedEmail';
 import Languages from '../../../../Components/Languages';
-import { querySearchParams } from '../../../../Utilities/query/searchParams';
 import { fetchProducts } from '../../../../Redux/Features/Products/productSlice';
 import { useForm } from 'react-hook-form';
 import { omit } from 'lodash';
@@ -112,7 +111,7 @@ const HeaderDefault = () => {
                         <img className='w-[200px]' src='https://freelogopng.com/images/all_img/1656181621shopee-logo-white.png' alt='shopeelogo' />
                     </Link>
 
-                    <div className="header_searchbar w-full">
+                    <div className="header_searchbar w-full max-w-[1000px]">
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <input
                                 className="search_input p-3 rounded-lg w-full hover:outline-none outline-none"

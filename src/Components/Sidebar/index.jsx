@@ -108,8 +108,10 @@ const SideBar = () => {
     const handleResetFilter = () => {
         navigate({
             pathname: '/',
-            search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
+            search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category',])).toString()
         })
+        setPriceMin('')
+        setPriceMax('')
     }
 
     return (

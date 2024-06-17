@@ -40,6 +40,13 @@ const Home = () => {
         }
     }, [locationSearch])
 
+    useLayoutEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        })
+    }, [listProducts])
+
 
     useEffect(() => {
         dispatch(fetchProducts(locationSearch))

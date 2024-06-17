@@ -1,7 +1,6 @@
-import { Divider, Dropdown, Flex, Popover, Space, Typography } from 'antd';
-import { CiGlobe, CiSearch } from "react-icons/ci";
-import { TfiAngleDown } from "react-icons/tfi";
-import { Link } from 'react-router-dom';
+import { Divider, Flex, Popover } from 'antd';
+import { CiSearch } from "react-icons/ci";
+import { Link, createSearchParams, useNavigate } from 'react-router-dom';
 import UserPopover from '../../../../Components/Popover/User';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserData } from '../../../../Redux/Features/User/userSlice';
@@ -10,8 +9,14 @@ import { fetchUserCart } from '../../../../Redux/Features/Purchase/purchaseSlice
 import getAvatar from '../../../../Utilities/Format/getAvatar';
 import { truncatedEmail } from '../../../../Utilities/Format/truncatedEmail';
 import Languages from '../../../../Components/Languages';
+import { useForm } from 'react-hook-form';
+import { omit } from 'lodash';
+import useQueryConfig from '../../../../Hooks/useQueryConfig';
 
 const HeaderCart = () => {
+    const { register, handleSubmit } = useForm()
+    const queryConfig = useQueryConfig()
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const accessToken = useSelector(state => state.auth.accessToken)
     const userData = useSelector(state => state.user.user.data)
@@ -24,17 +29,23 @@ const HeaderCart = () => {
         }
     }, [dispatch, accessToken, userData])
 
-
-    const items = [
-        {
-            key: '1',
-            label: 'Tiếng Việt',
-        },
-        {
-            key: '2',
-            label: 'English',
-        },
-    ]
+    const onSubmit = (data) => {
+        if (!data) {
+            return
+        }
+        navigate({
+            pathname: '/',
+            search: createSearchParams(
+                omit(
+                    {
+                        ...queryConfig,
+                        name: data.search
+                    },
+                    ['order']
+                )
+            ).toString()
+        })
+    }
 
     return (
         <div className="header text-white bg-[#ffffff] shadow-detail">
@@ -75,9 +86,18 @@ const HeaderCart = () => {
                         <p className='text-[#fa5030] text-[20px] leading-10'>Giỏ hàng</p>
                     </Link>
 
-                    <div className='header_searchbar max-w-[500px] w-full'>
-                        <input className='search_input p-3 rounded-lg w-[100%] border-[#fa5030] border-2 focus:outline-none ' placeholder='Free Ship đơn từ 0 đồng...' />
-                        <button className='search_btn px-5 py-2 rounded-md'><CiSearch /></button>
+                    <div className="header_searchbar w-full max-w-[500px]">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <input
+                                className="search_input p-3 rounded-lg w-full border-2 border-[#fa5030] hover:outline-none outline-none"
+                                type="text"
+                                placeholder="Tìm kiếm sản phẩm..."
+                                {...register("search")}
+                            />
+                            <button type="submit" className="search_btn px-6 py-2 rounded-sm">
+                                <CiSearch />
+                            </button>
+                        </form>
                     </div>
                 </Flex>
             </div>
