@@ -6,8 +6,9 @@ import { Flex } from "antd"
 
 
 const ItemCardDetail = ({ item }) => {
+
     return (
-        <Link to={`/detail/${encodeURIComponent(item.name)}-i-${item._id}`}>
+        <Link to={`/detail/${item.name}-i-${item._id}`}>
             <div className="w-[200px] rounded-sm overflow-hidden shadow-lg hover:translate-y-[-5px] transition-transform duration-300 ease-in-out cursor-pointer"
             >
                 <div className="overflow-hidden aspect-square">

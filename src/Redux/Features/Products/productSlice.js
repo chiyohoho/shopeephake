@@ -9,7 +9,7 @@ export const fetchProducts = createAsyncThunk(
             const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}/${params}`)
             return response.data.data;
         } else {
-            const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}`, { params })
+            const response = await axios.get(`${API}/${PRODUCT_ENDPOINT.products}/?page=1&limit=20`,)
             return response.data.data;
         }
     }

@@ -1,6 +1,6 @@
 import { Button, Divider, Flex, Popover, } from 'antd';
 import { CiSearch, CiShoppingCart } from "react-icons/ci";
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import CartPopover from '../../../../Components/Cart/CartPopover';
 import UserPopover from '../../../../Components/Popover/User';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,39 +16,47 @@ import Languages from '../../../../Components/Languages';
 import { querySearchParams } from '../../../../Utilities/query/searchParams';
 import { fetchProducts } from '../../../../Redux/Features/Products/productSlice';
 import { useForm } from 'react-hook-form';
+import { omit } from 'lodash';
+import useQueryConfig from '../../../../Hooks/useQueryConfig';
 
 
 const HeaderDefault = () => {
     const { register, handleSubmit } = useForm()
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const queryConfig = useQueryConfig()
     const accessToken = useSelector(state => state.auth.accessToken)
     const userData = useSelector(state => state.user.user.data)
     const userDataCart = useSelector(state => state.purchase.userCart.data)
     const avatar = getAvatar(userData)
 
-    const [updateSearchParams, setUpdateSearchParams] = useState(querySearchParams())
-    const [searchParams, setSearchparams] = useSearchParams()
     const locationSearch = useLocation().search
 
     const onSubmit = (data) => {
         if (!data) {
+            navigate({
+                pathname: '/',
+                search: createSearchParams(omit(queryConfig, ['name'])).toString()
+            })
             return
         }
-        const updatedParams = { ...updateSearchParams, name: data.search }
-
-        setSearchparams(updatedParams)
-        setUpdateSearchParams(updatedParams)
+        navigate({
+            pathname: '/',
+            search: createSearchParams(
+                omit(
+                    {
+                        ...queryConfig,
+                        name: data.search
+                    },
+                    ['order']
+                )
+            ).toString()
+        })
     }
 
     useEffect(() => {
-        if (locationSearch) {
-            dispatch(fetchProducts(locationSearch))
-        } else {
-            const newSearchParams = { ...updateSearchParams }
-            dispatch(fetchProducts(newSearchParams))
-        }
-    }, [dispatch, updateSearchParams, locationSearch])
+        dispatch(fetchProducts(locationSearch))
+    }, [dispatch, locationSearch])
 
 
     useEffect(() => {
