@@ -19,8 +19,6 @@ const SideBar = () => {
     const [searchParams, setSearchparams] = useSearchParams()
     const locationSearch = useLocation().search
 
-    console.log('check updateSearchParams:', updateSearchParams)
-
     useEffect(() => {
         dispatch(fetchDataCategories())
     }, [dispatch])

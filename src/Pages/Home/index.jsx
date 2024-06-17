@@ -38,7 +38,7 @@ const Home = () => {
         }
     }, [dispatch, updateSearchParams, locationSearch])
 
-    const handleOnChangeSetActiveSort = async (target) => {
+    const handleOnChangeSetActiveSort = (target) => {
         if (activeSort === target) {
             return
         }
@@ -59,13 +59,14 @@ const Home = () => {
         setSortByPrice(e.target.value)
     }
 
-    const handlePagination = (isNext) => {
-        const newPage = isNext ? pagination.page + 1 : pagination.page - 1
-        const newSearchParams = { ...updateSearchParams, page: newPage }
+    const handlePaginationChange = (newPageOrIsNext) => {
+        const newPage = typeof newPageOrIsNext === "boolean"
+            ? pagination.page + (newPageOrIsNext ? 1 : -1)
+            : newPageOrIsNext
 
+        const newSearchParams = { ...updateSearchParams, page: newPage }
         setSearchparams(newSearchParams)
         setUpdateSearchParams(newSearchParams)
-
     }
 
     if (!listProductStatus) {
@@ -73,6 +74,8 @@ const Home = () => {
             new Array(5).fill(null).map((_, index) => <Skeleton key={index} />)
         )
     }
+
+    console.log('check pagination.page:', pagination.page)
 
     return (
         <Flex className="max-w-[1400px] mx-auto mt-10 gap-10 px-5">
@@ -102,10 +105,10 @@ const Home = () => {
                         </Flex>
 
                         <Flex className="items-center">
-                            <button onClick={() => handlePagination(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
+                            <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
                                 <FaAngleLeft />
                             </button>
-                            <button onClick={() => handlePagination(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
+                            <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
                                 <FaAngleRight />
                             </button>
                         </Flex>
@@ -118,6 +121,28 @@ const Home = () => {
                             <ItemCard key={item._id} item={item} />
                         ))}
                 </div>
+
+                <Flex className="pagination_bottom justify-center my-10 gap-5">
+                    <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`py-2 px-4 shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
+                        <FaAngleLeft />
+                    </button>
+
+                    <Flex className="gap-5">
+                        {pagination &&
+                            Array(pagination.page_size)
+                                .fill(null)
+                                .map((_, index) =>
+                                    <Flex key={index} onClick={() => handlePaginationChange(index + 1)}
+                                        className={`${pagination.page === (index + 1) ? 'border-[#fa5030]' : 'border-gray-300'} cursor-pointer items-center justify-center w-11 h-10 bg-[#ffffff] border-[1px] rounded-md`}>
+                                        {index + 1}
+                                    </Flex>
+                                )}
+                    </Flex>
+
+                    <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`py-2 px-4 shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
+                        <FaAngleRight />
+                    </button>
+                </Flex>
             </section >
         </Flex >
     )
