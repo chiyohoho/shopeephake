@@ -42,7 +42,7 @@ const UserSideBar = () => {
     }
 
     return (
-        <div className="w-full p-2 shadow-detail mb-5 bg-white">
+        <div className="p-2 shadow-detail mb-5 bg-white">
             <Flex className="items-center gap-2 mb-2 ">
                 <div className="border-[1px] border-[#ccc] rounded-full">
                     <img className="rounded-full w-10 h-10 overflow-hidden"

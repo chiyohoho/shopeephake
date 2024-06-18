@@ -116,14 +116,14 @@ const Home = () => {
 
     return (
         <Flex className="max-w-[1400px] mx-auto mt-10 gap-10 px-5">
-            <div className="max-[768px]:hidden">
+            <div className="max-[769px]:hidden">
                 <SideBar />
             </div>
 
             <section className="w-full">
                 {listProducts?.length > 0 ?
                     <div>
-                        <Flex className="max-[768px]:flex-col max-[768px]:hidden items-center gap-5 justify-between bg-[#dde0e5] p-5">
+                        <Flex className="max-[769px]:hidden items-center gap-5 justify-between bg-[#dde0e5] p-5">
                             <Flex className="sort_bar flex-wrap items-center gap-3">
                                 <p>Sắp xếp theo:</p>
 
@@ -156,7 +156,7 @@ const Home = () => {
                             </Flex>
                         </Flex>
 
-                        <div className="min-[768px]:hidden max-[768px]:block p-5 bg-gray-200">
+                        <div className="min-[769px]:hidden p-5 bg-gray-200">
                             <Flex className="justify-between">
                                 <SideBarDrawer />
 

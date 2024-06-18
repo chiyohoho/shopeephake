@@ -11,13 +11,13 @@ const UserLayout = () => {
         <div className="bg-[#f5f5f5]">
             <HeaderDefault />
 
-            <Flex className="max-w-[1400px] w-full gap-2 mx-auto px-5 my-5">
+            <Flex className="gap-1 my-5 border-2 px-5">
                 <div className="max-[768px]:hidden">
                     <UserNavBar />
                 </div>
 
                 <div className="w-full">
-                    <div className="min-[768px]:hidden mb-5">
+                    <div className="min-[769px]:hidden mb-5">
                         <UserSideBar />
                     </div>
 

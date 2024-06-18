@@ -57,15 +57,15 @@ const HeaderCart = () => {
 
                     {accessToken ? (
                         <Flex className='text-[16px] items-center ' gap={5}>
-                            <Popover placement="bottomRight" content={<UserPopover />}>
-                                <Link to={'/user/profile'} className='hover:text-white'>
+                            <Popover placement="bottomRight" trigger={'hover'} content={<UserPopover />}>
+                                <div className='hover:text-white'>
                                     <Flex className='items-center gap-1 cursor-pointer'>
                                         <img className="min-w-[24px] h-[24px] rounded-full overflow-hidden"
                                             src={avatar.userAvatar} alt="avatar"
                                         />
                                         <p>{truncatedEmail(userData)}</p>
                                     </Flex>
-                                </Link>
+                                </div>
                             </Popover>
                         </Flex>
                     ) : !accessToken ? (
