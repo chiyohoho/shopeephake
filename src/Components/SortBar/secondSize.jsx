@@ -5,9 +5,8 @@ import { useEffect, useLayoutEffect, useState } from "react"
 import { fetchProducts } from "../../Redux/Features/Products/productSlice"
 import { omit } from "lodash"
 import { Flex } from "antd"
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa"
 
-const SortBar = () => {
+const MiniSortBar = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const queryConfig = useQueryConfig()
@@ -87,55 +86,22 @@ const SortBar = () => {
         })
     }
 
-    const handlePaginationChange = (newPageOrIsNext) => {
-        const newPage = typeof newPageOrIsNext === "boolean"
-            ? pagination.page + (newPageOrIsNext ? 1 : -1)
-            : newPageOrIsNext
 
-        navigate({
-            pathname: '/',
-            search: createSearchParams(
-                omit({
-                    ...queryConfig,
-                    page: newPage,
-                })
-            ).toString()
-        })
-    }
     return (
-        <Flex className="max-[768px]:flex-col gap-5 justify-between bg-[#dde0e5] p-5">
-            <Flex className="justify-between items-center">
-                <p>Sắp xếp theo:</p>
+        <div className="grid grid-cols-2 gap-2 w-[250px]">
+            <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center border-[1px] border-[#ccc] rounded-md`} >Phổ biến</div>
 
-                <Flex className="items-center justify-center gap-2">
-                    <Flex>
-                        <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
-                    </Flex>
+            <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center border-[1px] border-[#ccc] rounded-md`}>Mới nhất</div>
 
-                    <Flex className="items-center">
-                        <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
-                            <FaAngleLeft />
-                        </button>
-                        <button onClick={() => handlePaginationChange(true)} disabled={pagination?.page === pagination?.page_size ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === pagination?.page_size ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'} `}>
-                            <FaAngleRight />
-                        </button>
-                    </Flex>
-                </Flex>
-            </Flex>
+            <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center border-[1px] border-[#ccc] rounded-md`}>Bán chạy</div>
 
-            <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center`} >Phổ biến</div>
-
-            <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center`}>Mới nhất</div>
-
-            <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer text-center`}>Bán chạy</div>
-
-            <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer outline-none text-center`}>
+            <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer outline-none text-center border-[1px] border-[#ccc] rounded-md`}>
                 <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
                 <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
                 <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
             </select>
-        </Flex>
+        </div>
     )
 }
 
-export default SortBar
+export default MiniSortBar

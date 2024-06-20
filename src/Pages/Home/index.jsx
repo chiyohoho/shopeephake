@@ -10,6 +10,7 @@ import useQueryConfig from "../../Hooks/useQueryConfig"
 import { omit } from "lodash"
 import SideBarDrawer from "../../Components/Drawer/sidebarDrawer"
 import SortDrawer from "../../Components/Drawer/sortDrawer"
+import Sorter from "../../Components/Popover/Sorter"
 
 const Home = () => {
     const dispatch = useDispatch()
@@ -123,25 +124,31 @@ const Home = () => {
             <section className="w-full">
                 {listProducts?.length > 0 ?
                     <div>
-                        <Flex className="max-[769px]:hidden items-center gap-5 justify-between bg-[#dde0e5] p-5">
-                            <Flex className="sort_bar flex-wrap items-center gap-3">
+                        <Flex className="max-[769px]:hidden items-center justify-between bg-[#dde0e5] p-5">
+                            <Flex className="items-center gap-2">
                                 <p>Sắp xếp theo:</p>
 
-                                <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
+                                <Flex className="max-[1028px]:hidden sort_bar flex-wrap items-center gap-3">
+                                    <div onClick={() => handleOnChangeSetActiveSort('view')} className={`p-2 ${activeSort == 'view' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`} >Phổ biến</div>
 
-                                <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
+                                    <div onClick={() => handleOnChangeSetActiveSort('createdAt')} className={`p-2 ${activeSort == 'createdAt' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Mới nhất</div>
 
-                                <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
+                                    <div onClick={() => handleOnChangeSetActiveSort('sold')} className={`p-2 ${activeSort == 'sold' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer`}>Bán chạy</div>
 
-                                <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
-                                    <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
-                                    <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
-                                    <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
-                                </select>
+                                    <select value={sortByPrice} onChange={(e) => { handleOnChangeSortByPrice(e) }} className={`p-2 ${activeSort == 'price' ? 'bg-[#fc5831] text-white' : 'bg-white text-black'} cursor-pointer focus:outline-none`}>
+                                        <option className="bg-white text-grat-500" value={''} disabled>Giá</option>
+                                        <option className="bg-white text-black" value={'asc'}>Thấp đến cao</option>
+                                        <option className="bg-white text-black" value={'desc'}>Cao đến thấp</option>
+                                    </select>
+                                </Flex>
+
+                                <div className="min-[1028px]:hidden">
+                                    <Sorter />
+                                </div>
                             </Flex>
 
-                            <Flex className="items-center justify-center gap-2 self-end">
-                                <Flex>
+                            <Flex className="items-center justify-center gap-2">
+                                <Flex className="h-full">
                                     <p className="text-[#fc5831]">{pagination?.page}</p>/<p>{pagination?.page_size}</p>
                                 </Flex>
 
@@ -156,11 +163,13 @@ const Home = () => {
                             </Flex>
                         </Flex>
 
-                        <div className="min-[769px]:hidden p-5 bg-gray-200">
+
+
+                        <div className="min-[769px]:hidden px-5 py-2 bg-gray-200 rounded-md">
                             <Flex className="justify-between">
                                 <SideBarDrawer />
 
-                                <Flex className="items-center justify-center gap-2 self-end">
+                                <Flex className="items-center justify-center gap-2">
                                     <button onClick={() => handlePaginationChange(false)} disabled={pagination?.page === 1 ? true : false} className={`p-[10px] shadow-detail text-[12px] ${pagination?.page === 1 ? 'cursor-not-allowed bg-gray-100' : 'cursor-pointer bg-white'}`}>
                                         <FaAngleLeft />
                                     </button>
@@ -181,7 +190,7 @@ const Home = () => {
                 }
 
                 {listProducts?.length > 0 ?
-                    <div className="mt-10 grid gap-2 grid-cols-2 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3">
+                    <div className="mt-5 grid gap-2 grid-cols-2 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3">
                         {listProducts.map((item) => (
                             <ItemCard key={item._id} item={item} />
                         ))}

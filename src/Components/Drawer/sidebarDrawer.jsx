@@ -12,7 +12,7 @@ const SideBarDrawer = () => {
     };
     return (
         <>
-            <button className='flex items-center justify-center rounded-md h-8 px-2 border-[1px] border-orange-600' onClick={showDrawer}>
+            <button className='flex items-center justify-center gap-1 rounded-md h-10 px-2 border-2 border-gray-500 hover:border-orange-600' onClick={showDrawer}>
                 <CiFilter />
                 <p>Bộ lọc</p>
             </button>
